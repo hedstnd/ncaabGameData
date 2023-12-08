@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>NCAAB Game Data</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <script src="script.js"></script>
+	<div id="scores"></div>
+	<table id="game">
+	<tr><td id="slide" colspan="4"><!--<progress id="slider" max="100"></progress>-->
+	<span id = "awayWPSpan" class="slider"><img id="awayWPImg"></span><span id="homeWPSpan"><img id="homeWPImg"></span>
+	</td></tr>
+	<tr><td id="awayP1" class="away"><span id="awayP1Num" class="awayNum"></span><span id="awayP1Pos" class="awayPos"></span></td><td class="away" id="awayInfo"><div id="awayWP"></div><h2 id="awayTop"><span id="awayName"></span><span id="awayScore"></span></h2><span id="awayDesc"></span></td><td id="homeInfo" class="home"><div id="homeWP"></div><h2 id="homeTop"><div id="homeName"></div><div id="homeScore"></div></h2><span id="homeDesc"></span></td><td id="homeP1" class="home"><span id="homeP1Num" class="homeNum"></span><span id="homeP1Pos" class="homePos"></span></td></tr>
+	<tr><td id="awayP2" class="away"><span id="awayP2Num" class="awayNum"></span><span id="awayP2Pos" class="awayPos"></span></td><td class="away" id="awayPtLd"></td><td id="homePtLd" class="home"></td><td id="homeP2" class="home"><span id="homeP2Num" class="homeNum"></span><span id="homeP2Pos" class="homePos"></span></td></tr>
+	<tr><td id="awayP3" class="away"><span id="awayP3Num" class="awayNum"></span><span id="awayP3Pos" class="awayPos"></span></td><td class="away" id="awayRebLd"></td><td id="homeRebLd" class="home"></td><td id="homeP3" class="home"><span id="homeP3Num" class="homeNum"></span><span id="homeP3Pos" class="homePos"></span></td></tr>
+	<tr><td id="awayP4" class="away"><span id="awayP4Num" class="awayNum"></span><span id="awayP4Pos" class="awayPos"></span></td><td class="away" id="awayAstLd"></td><td id="homeAstLd" class="home"></td><td id="homeP4" class="home"><span id="homeP4Num" class="homeNum"></span><span id="homeP4Pos" class="homePos"></span></td></tr>
+	<tr><td id="awayP5" class="away"><span id="awayP5Num" class="awayNum"></span><span id="awayP5Pos" class="awayPos"></span></td><td class="away" id="awayFls">Foul Trouble</td><td id="homeFls" class="home">Foul Trouble</td><td id="homeP5" class="home"><span id="homeP5Num" class="homeNum"></span><span id="homeP5Pos" class="homePos"></span></td></tr>
+	</div>
+	</table>
+<div id="popUp"><p id="popText"></p><span id="close" class="close"></span></div>
+<div id="sett"><!--<label id="offLabel">Output Delay: <span id="delaySec">0s</span> <input type="range" id="offset" value="0" min="0" max="30" onchange="delayTime()"></label>--><span id="closeSett" class="close"onclick="closeSett()"></span></div>
+</body>
+
+</html>
