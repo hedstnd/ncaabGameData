@@ -13,7 +13,7 @@ window.onload = function() {
 	getData(baseURL + "scoreboard?groups=50&dates=" + d.toISOString().substring(0,10).replaceAll("-","")).then((value) => {
 		console.log(value);
 		if (value.events.length > 0) {
-			g = value.events.filter(e => e.status.type.state != "post");
+			g = value.events.filter(e => e.status.type.state == "in");
 		} else {
 			g = [];
 		}
@@ -201,7 +201,7 @@ function pitchDisplay(game) {
 		try {
 			document.getElementById(tm.homeAway+"P"+(j+1)).innerHTML = "<span id=\""+tm.homeAway+"P"+(j+1)+"Num\" class=\""+tm.homeAway+"Num\"></span><span id=\""+tm.homeAway+"P"+(j+1)+"Pos\" class=\""+tm.homeAway+"Pos\"></span>"+"<img src=\""+onCourt[j].athlete.headshot.href+"\" alt=\""+onCourt[j].athlete.headshot.alt+"\"><br/>"+onCourt[j].athlete.headshot.alt;
 		} catch(err) {
-			document.getElementById(tm.homeAway+"P"+(j+1)).innerHTML = "<span id=\""+tm.homeAway+"P"+(j+1)+"Num\" class=\""+tm.homeAway+"Num\"></span><span id=\""+tm.homeAway+"P"+(j+1)+"Pos\" class=\""+tm.homeAway+"Pos\"></span>" + "<img src=\"\" alt=\""+onCourt[j].athlete.displayName+"\">";
+			document.getElementById(tm.homeAway+"P"+(j+1)).innerHTML = "<span id=\""+tm.homeAway+"P"+(j+1)+"Num\" class=\""+tm.homeAway+"Num\"></span><span id=\""+tm.homeAway+"P"+(j+1)+"Pos\" class=\""+tm.homeAway+"Pos\"></span>" + "<img src=\"\" alt=\""+onCourt[j].athlete.displayName+"\" class=\"noImg\">";
 		}
 		document.getElementById(tm.homeAway+"P"+(j+1)).innerHTML+= "<br/>"+onCourt[j].stats[ptsKey] + " PTS " + onCourt[j].stats[rebKey]+ " REB " + onCourt[j].stats[astKey] + " AST";
 		if (onCourt[j].stats[blkKey] > 2) {

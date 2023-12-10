@@ -8,8 +8,11 @@
 	--awayT: white;
 	
 }
+.noImg {
+	width: 13dvh !important;
+}
 .home img, .away img {
-	height: 13.12dvh;
+	height: 13dvh;
 	width: auto;
 }
 .homeNum, .awayNum {
