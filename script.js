@@ -10,7 +10,7 @@ var d = new Date();
 d.setHours(d.getHours() - timeOffset);
 var r = document.querySelector(':root');
 window.onload = function() {
-	getData(baseURL + "scoreboard?groups=50&dates=20240210"/*+ d.toISOString().substring(0,10).replaceAll("-","")*/).then((value) => {
+	getData(baseURL + "scoreboard?groups=50&dates="+ d.toISOString().substring(0,10).replaceAll("-","")).then((value) => {
 		console.log(value);
 		if (value.events.length > 0) {
 			g = value.events.filter(e => e.status.type.state != "in");
