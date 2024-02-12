@@ -6,6 +6,8 @@
 	--homeT: #000000;
 	--awayBg: gray;
 	--awayT: white;
+	--homeLogo: url('');
+	--awayLogo: url('');
 	
 }
 .noImg {
@@ -14,6 +16,17 @@
 .home img, .away img {
 	height: 13dvh;
 	width: auto;
+	backdrop-filter: blur(5px);
+	-webkit-backdrop-filter: blur(5px);
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.home img {
+	background-image: var(--homeLogo);
+}
+.away img {
+	background-image: var(--awayLogo);
 }
 .homeNum, .awayNum {
 	float: right;

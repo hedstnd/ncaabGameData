@@ -10,10 +10,10 @@ var d = new Date();
 d.setHours(d.getHours() - timeOffset);
 var r = document.querySelector(':root');
 window.onload = function() {
-	getData(baseURL + "scoreboard?groups=50&dates=" + d.toISOString().substring(0,10).replaceAll("-","")).then((value) => {
+	getData(baseURL + "scoreboard?groups=50&dates=20240210"/*+ d.toISOString().substring(0,10).replaceAll("-","")*/).then((value) => {
 		console.log(value);
 		if (value.events.length > 0) {
-			g = value.events.filter(e => e.status.type.state == "in");
+			g = value.events.filter(e => e.status.type.state != "in");
 		} else {
 			g = [];
 		}
@@ -151,6 +151,11 @@ function pitchDisplay(game) {
 	} catch (err) {
 		document.getElementById(tm.homeAway+"WPImg").src = "";
 	}
+	try {
+		r.style.setProperty("--"+tm.homeAway+"Logo","url('"+(tm.team.logos[1].href) + "')");
+	} catch {
+		r.style.setProperty("--"+tm.homeAway+"Logo","url('"+(tm.team.logos[0].href) + "')");
+	}
 	document.getElementById(tm.homeAway+"WPSpan").style.backgroundColor = "#" + tm.team.color;
 	if (tm.team.color) {
 		r.style.setProperty("--"+tm.homeAway+"Bg","#"+tm.team.color);
@@ -172,7 +177,11 @@ function pitchDisplay(game) {
 			onCourt = box[0].statistics[0].athletes.filter(e => e.starter);
 		}
 		var flKey = box[0].statistics[0].keys.indexOf("fouls");
-		flTrb = box[0].statistics[0].athletes.filter(e => e.stats[flKey] >= 3 || e.ejected);
+		if (game.status.period == 1) {
+			flTrb = box[0].statistics[0].athletes.filter(e => e.stats[flKey] >= 2 || e.ejected);
+		} else {
+			flTrb = box[0].statistics[0].athletes.filter(e => e.stats[flKey] >= 3 || e.ejected);
+		}
 	} catch (err) {
 		
 	}
