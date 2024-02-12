@@ -13,7 +13,7 @@ window.onload = function() {
 	getData(baseURL + "scoreboard?groups=50&dates="+ d.toISOString().substring(0,10).replaceAll("-","")).then((value) => {
 		console.log(value);
 		if (value.events.length > 0) {
-			g = value.events.filter(e => e.status.type.state != "in");
+			g = value.events.filter(e => e.status.type.state == "in");
 		} else {
 			g = [];
 		}
