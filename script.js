@@ -177,7 +177,7 @@ function pitchDisplay(game) {
 			onCourt = box[0].statistics[0].athletes.filter(e => e.starter);
 		}
 		var flKey = box[0].statistics[0].keys.indexOf("fouls");
-		if (game.status.period == 1) {
+		if (lastPlay.period.number == 1) {
 			flTrb = box[0].statistics[0].athletes.filter(e => e.stats[flKey] >= 2 || e.ejected);
 		} else {
 			flTrb = box[0].statistics[0].athletes.filter(e => e.stats[flKey] >= 3 || e.ejected);
