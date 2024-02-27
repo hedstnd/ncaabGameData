@@ -232,7 +232,7 @@ function pitchDisplay(game) {
 		try {
 			ad.innerHTML+= "#" + lead.leaders[j].leaders[0].athlete.jersey + " " + lead.leaders[j].leaders[0].athlete.shortName + " (" + lead.leaders[j].leaders[0].displayValue + ")";
 		} catch (err) {
-			ad.innerHTML += "none";
+			ad.innerHTML += "None";
 		}
 	}
 	}

@@ -127,6 +127,7 @@ body {
 	margin-top: 0;
 	margin-bottom: 0;
 	width: 100dvw;
+	height: 100dvh;
 }
 #game tr {
 	width: 100dvw;
@@ -286,6 +287,9 @@ table, td, tr {
 }
 #game table, #game tr, #game td {
 	border: 1px solid;
+}
+.nonSlide td {
+	height: 19dvh;
 }
 #game tr:first-child, #slide {
 	border: none !important;
