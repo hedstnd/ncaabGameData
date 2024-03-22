@@ -115,7 +115,11 @@ function pitchDisplay(game) {
 			wP = document.getElementById(tm.homeAway+"WP");//createElement("span");
 			// wP.className = 'winProb';
 			wP.innerHTML = wProbText;
-			document.getElementById(tm.homeAway+"Name").innerHTML = tm.team.nickname;
+			if (game.header.competitions[0].tournamentId) {
+				document.getElementById(tm.homeAway+"Name").innerHTML = "(" + tm.rank + ") " + tm.team.nickname;
+			} else {
+				document.getElementById(tm.homeAway+"Name").innerHTML = tm.team.nickname;
+			}
 			document.getElementById(tm.homeAway+"Score").innerHTML = lastPlay[tm.homeAway+"Score"] || (tm.score || "");
 			// top.before(wP);
 			// document.getElementById(tm.homeAway+"WPSpan").value=valCM.awayWinProbability;
