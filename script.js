@@ -3,6 +3,7 @@ var day;// = dayOfWeek[(new Date()).getDay()].toLowerCase();
 var timeOffset = (new Date()).getTimezoneOffset() / 60;
 var twos = ["home","away"];
 const baseURL = "https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/";
+const baseU2 = "https://site.api.espn.com/apis/site/v2/sports/basketball/womens-college-basketball/";
 var vars;
 var uRL;
 var hideCode = "";
@@ -11,12 +12,20 @@ d.setHours(d.getHours() - timeOffset);
 var r = document.querySelector(':root');
 window.onload = function() {
 	getData(baseURL + "scoreboard?groups=50&dates="+ d.toISOString().substring(0,10).replaceAll("-","")).then((value) => {
+		getData(baseU2 + "scoreboard?groups=50&dates="+ d.toISOString().substring(0,10).replaceAll("-","")).then((val2) => {
 		console.log(value);
+		console.log(val2);
 		if (value.events.length > 0) {
-			g = value.events.filter(e => e.status.type.state == "in");
+			g3 = value.events.filter(e => e.status.type.state == "in");
 		} else {
-			g = [];
+			g3 = [];
 		}
+		if (val2.events.length > 0) {
+			g2 = val2.events.filter(e => e.status.type.state == "in");
+		} else {
+			g2 = [];
+		}
+		g = g3.concat(g2);
 		tab = document.createElement("table");
 		for (var i = 0; i < g.length/4; i++) {
 			row = document.createElement("tr");
@@ -24,9 +33,15 @@ window.onload = function() {
 				if (/*g[j].teams.away.score!=null && g[j].teams.home.score!=null*/true) {
 					game = document.createElement("td");
 					if (g[j].status.type.state != "in") {
-						game.innerHTML = g[j].name + "<br/>" + getGameTime(g[j].date);
+						if (g2.includes(g[j])) {
+							game.innerHTML = "(WBB) ";
+						}
+						game.innerHTML += g[j].name + "<br/>" + getGameTime(g[j].date);
 					} else {
-						game.innerHTML = g[j].name +"<br/>"+g[j].status.type.shortDetail;
+						if (g2.includes(g[j])) {
+							game.innerHTML = "(WBB) ";
+						}
+						game.innerHTML += g[j].name +"<br/>"+g[j].status.type.shortDetail;
 						// if (g[j].status.statusCode != g[j].status.codedGameState) {
 							// game.innerHTML+= " ("+g[j].status.detailedState+")";
 						// }
@@ -34,7 +49,11 @@ window.onload = function() {
 					if (g[j].status.type.state == "") {
 						game.setAttribute("onclick","runGD(\""+baseURL+g[j].link+"\",\""+ g[j].description +"\")");
 					} else {
+						if (g2.includes(g[j])) {
+							game.setAttribute("onclick","runGD(\""+baseU2+"summary?event="+g[j].id+"\")");
+						} else {
 							game.setAttribute("onclick","runGD(\""+baseURL+"summary?event="+g[j].id+"\")");
+						}
 					}
 					row.appendChild(game);
 				}  else if (g[j].status.statusCode != g[j].status.codedGameState) {
@@ -61,7 +80,7 @@ window.onload = function() {
 		if (g.length == 0) {
 			document.getElementById("scores").innerHTML += "<table><td>No active games</td></table>";
 		}
-});
+	});});
 }
 function gameDay() {
 	url = uRL;
@@ -115,7 +134,7 @@ function pitchDisplay(game) {
 			wP = document.getElementById(tm.homeAway+"WP");//createElement("span");
 			// wP.className = 'winProb';
 			wP.innerHTML = wProbText;
-			if (game.header.competitions[0].tournamentId) {
+			if (game.header.competitions[0].tournamentId && tm.rank) {
 				document.getElementById(tm.homeAway+"Name").innerHTML = "(" + tm.rank + ") " + tm.team.nickname;
 			} else {
 				document.getElementById(tm.homeAway+"Name").innerHTML = tm.team.nickname;
@@ -165,7 +184,13 @@ function pitchDisplay(game) {
 		r.style.setProperty("--"+tm.homeAway+"Bg","#"+tm.team.color);
 	}
 	if (tm.team.alternateColor) {
-		r.style.setProperty("--"+tm.homeAway+"T","#"+tm.team.alternateColor);
+		if (tm.team.alternateColor == tm.team.color && tm.team.color != "#FFFFFF") {
+			r.style.setProperty("--"+tm.homeAway+"T","#FFFFFF");
+		} else if (tm.team.alternateColor == tm.team.color && tm.team.color == "#FFFFFF") {
+			r.style.setProperty("--"+tm.homeAway+"T","#000000");
+		} else {
+			r.style.setProperty("--"+tm.homeAway+"T","#"+tm.team.alternateColor);
+		}
 	}
 	var lead = game.leaders.filter(e => e.team.id == tm.id)[0];
 	console.log(lead);
@@ -181,7 +206,7 @@ function pitchDisplay(game) {
 			onCourt = box[0].statistics[0].athletes.filter(e => e.starter);
 		}
 		var flKey = box[0].statistics[0].keys.indexOf("fouls");
-		if (lastPlay.period.number == 1) {
+		if (lastPlay.period.number <= game.format.regulation.periods/2) {
 			flTrb = box[0].statistics[0].athletes.filter(e => e.stats[flKey] >= 2 || e.ejected);
 		} else {
 			flTrb = box[0].statistics[0].athletes.filter(e => e.stats[flKey] >= 3 || e.ejected);
