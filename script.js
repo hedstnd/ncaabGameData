@@ -108,16 +108,19 @@ function runGD(url, desc="") {
 	}
 	run = setInterval(gameDay,5000);
 }
-function pitchDisplay(game) {
+async function pitchDisplay(game) {
 	var lastPlay;
 	try {
 		lastPlay = game.plays.pop();
 	} catch (err) {
 		lastPlay = new Object();
 	}
+	var popUp = document.getElementById("popText");
+	await timeout(document.getElementById("offset").value * 1000);
+	document.getElementsByClassName("showSett")[0].style = "";
 	var wp = new Object();
 	try {
-		wp.home = Math.round(game.winprobability.pop().homeWinPercentage * 1000)/10;
+		wp.home = Math.round(game.winprobability.filter(e => e.playId == lastPlay.id)[0].homeWinPercentage * 1000)/10;
 	} catch (err) {
 		wp.home = game.predictor.homeTeam.gameProjection;
 	}
@@ -150,9 +153,6 @@ function pitchDisplay(game) {
 			document.getElementById(tm.homeAway+"WPImg").style.opacity = "1";
 			document.getElementById(tm.homeAway+"WPImg").style.width = "3dvh";
 		}
-	
-	// var popUp = document.getElementById("popText");
-	// setTimeout(() => {}, document.getElementById("offset").value * 1000);
 	// if (game.gameData.status.statusCode != "I" && game.gameData.status.statusCode != "PW" && game.gameData.status.statusCode != hideCode) {
 		// popUp.parentElement.style.display = "block";
 		// popUp.innerText = game.gameData.status.detailedState;
@@ -177,20 +177,26 @@ function pitchDisplay(game) {
 	try {
 		r.style.setProperty("--"+tm.homeAway+"Logo","url('"+(tm.team.logos[1].href) + "')");
 	} catch {
-		r.style.setProperty("--"+tm.homeAway+"Logo","url('"+(tm.team.logos[0].href) + "')");
+		try {
+			r.style.setProperty("--"+tm.homeAway+"Logo","url('"+(tm.team.logos[0].href) + "')");
+		} catch {
+			
+		}
 	}
 	document.getElementById(tm.homeAway+"WPSpan").style.backgroundColor = "#" + tm.team.color;
 	if (tm.team.color) {
 		r.style.setProperty("--"+tm.homeAway+"Bg","#"+tm.team.color);
 	}
 	if (tm.team.alternateColor) {
-		if (tm.team.alternateColor == tm.team.color && tm.team.color != "#FFFFFF") {
-			r.style.setProperty("--"+tm.homeAway+"T","#FFFFFF");
-		} else if (tm.team.alternateColor == tm.team.color && tm.team.color == "#FFFFFF") {
+		if (isSimilar(hexToRgb(tm.team.color),hexToRgb(tm.team.alternateColor)) && isSimilar(hexToRgb(tm.team.color),hexToRgb("FFFFFF"))) {
 			r.style.setProperty("--"+tm.homeAway+"T","#000000");
+		} else if (isSimilar(hexToRgb(tm.team.color),hexToRgb(tm.team.alternateColor))) {
+			r.style.setProperty("--"+tm.homeAway+"T","#FFFFFF");
 		} else {
 			r.style.setProperty("--"+tm.homeAway+"T","#"+tm.team.alternateColor);
 		}
+	} else if (tm.team.color == "000000") {
+		r.style.setProperty("--"+tm.homeAway+"T","#FFFFFF");
 	}
 	var lead = game.leaders.filter(e => e.team.id == tm.id)[0];
 	console.log(lead);
@@ -576,69 +582,6 @@ async function getData(url) {
 	return ret;
 }
 
-function abbrFromId(id) {
-	if (id == 133) {
-		return "OAK";
-	} else if (id == 134) {
-		return "PIT";
-	} else if (id == 135) {
-		return "SD";
-	} else if (id == 136) {
-		return "SEA";
-	} else if (id == 137) {
-		return "SF";
-	} else if (id == 138) {
-		return "STL";
-	} else if (id == 139) {
-		return "TB";
-	} else if (id == 140) {
-		return "TEX";
-	} else if (id == 141) {
-		return "TOR";
-	} else if (id == 142) {
-		return "MIN";
-	} else if (id == 143) {
-		return "PHI";
-	} else if (id == 144) {
-		return "ATL";
-	} else if (id == 145) {
-		return "CWS";
-	} else if (id == 146) {
-		return "MIA";
-	} else if (id == 147) {
-		return "NYY";
-	} else if (id == 158) {
-		return "MIL";
-	} else if (id == 108) {
-		return "LAA";
-	} else if (id == 109) {
-		return "ARI";
-	} else if (id == 110) {
-		return "BAL";
-	} else if (id == 111) {
-		return "BOS";
-	} else if (id == 112) {
-		return "CHC";
-	} else if (id == 113) {
-		return "CIN";
-	} else if (id == 114) {
-		return "CLE";
-	} else if (id == 115) {
-		return "COL";
-	} else if (id == 116) {
-		return "DET";
-	} else if (id == 117) {
-		return "HOU";
-	} else if (id == 118) {
-		return "KC";
-	} else if (id == 119) {
-		return "LAD";
-	} else if (id == 120) {
-		return "WAS";
-	} else if (id == 121) {
-		return "NYM";
-	}
-}
 function hideModal(code) {
 	document.getElementById("popUp").style.display = "none";
 	hideCode = code;
@@ -657,4 +600,17 @@ function showSett() {
 }
 function closeSett() {
 	document.getElementById("sett").style.display = "none";
+}
+function hexToRgb(hex) {
+	var ret = [];
+	for (var i = 0; i < hex.length; i+= 2) {
+		ret.push(parseInt(hex.substring(i,i+2),16));
+	}
+	return ret;
+}
+function isSimilar([r1, g1, b1], [r2, g2, b2]) {
+  return Math.abs(r1-r2) < 50 &&  Math.abs(g1-g2) < 50 && Math.abs(b1-b2) < 50;
+}
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
